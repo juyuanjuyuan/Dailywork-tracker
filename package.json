@@ -13,8 +13,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
-    "electron:build": "npm run build && electron-builder",
+    "lint": "next lint",
+    "electron:dev": "concurrently \"pnpm dev\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron:build": "pnpm build && electron-builder",
     "electron:compile": "tsc -p electron/tsconfig.json"
   },
   "dependencies": {
@@ -27,7 +28,7 @@
     "@react-aria/focus": "^3.17.0",
     "@react-aria/overlays": "^3.22.0",
     "@react-stately/overlays": "^3.6.6",
-    "@supabase/supabase-js": "^2.39.0",
+    "@supabase/supabase-js": "^2.45.0",
     "classnames": "2.5.1",
     "date-fns": "3.6.0",
     "next": "^14.2.3",
