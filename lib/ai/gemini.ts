@@ -25,7 +25,7 @@ async function callOpenAI(prompt: string, imageBase64?: string): Promise<string>
   }
 
   const messages: any[] = [];
-  
+
   if (imageBase64) {
     messages.push({
       role: 'user',
@@ -53,7 +53,7 @@ async function callOpenAI(prompt: string, imageBase64?: string): Promise<string>
     body: JSON.stringify({
       model: 'gpt-5-nano-2025-08-07',
       messages,
-      max_tokens: 2000,
+      max_completion_tokens: 2000,
       temperature: 0.2,
       response_format: { type: 'json_object' }
     })
@@ -86,7 +86,7 @@ export async function analyzeScreenshot(
   try {
     const response = await callOpenAI(prompt, imageBase64);
     const result = JSON.parse(response);
-    
+
     return {
       app_name: result.app_name || 'Unknown',
       activity_type: validateActivityType(result.activity_type),
@@ -99,7 +99,7 @@ export async function analyzeScreenshot(
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error('Screenshot analysis failed:', errorMessage);
-    
+
     return {
       app_name: 'Unknown',
       activity_type: 'other',
@@ -121,7 +121,7 @@ export async function generateReport(
 ): Promise<Omit<WorkReport, 'id' | 'session_id' | 'created_at'>> {
   const activityStats = new Map<ActivityType, number>();
   const appStats = new Map<string, number>();
-  
+
   for (const analysis of analyses) {
     const activity = analysis.activity_type as ActivityType;
     activityStats.set(activity, (activityStats.get(activity) || 0) + 1);
@@ -130,7 +130,7 @@ export async function generateReport(
 
   const totalCount = analyses.length || 1;
   const timeBreakdown: TimeBreakdown = {};
-  
+
   activityStats.forEach((count, activity) => {
     const percentage = (count / totalCount) * 100;
     (timeBreakdown as Record<ActivityType, { duration_minutes: number; percentage: number }>)[activity] = {
@@ -140,7 +140,7 @@ export async function generateReport(
   });
 
   // 汇总活动内容
-  const contents = analyses.slice(0, 30).map(a => 
+  const contents = analyses.slice(0, 30).map(a =>
     `[${a.app_name}] ${a.description}: ${a.detailed_content?.slice(0, 200) || ''}`
   ).join('\n');
 
@@ -160,7 +160,7 @@ ${contents}
   try {
     const response = await callOpenAI(prompt);
     const result = JSON.parse(response);
-    
+
     return {
       summary: result.summary || '今日工作完成',
       highlights: Array.isArray(result.activity_log) ? result.activity_log : [],
@@ -171,10 +171,10 @@ ${contents}
     };
   } catch (error) {
     console.error('Report generation failed:', error);
-    
+
     const topApps: string[] = [];
     appStats.forEach((_, app) => topApps.push(app));
-    
+
     return {
       summary: `今日工作 ${sessionDurationMinutes} 分钟，共 ${analyses.length} 条记录。使用了 ${topApps.slice(0, 3).join('、') || '多个应用'}。`,
       highlights: topApps.slice(0, 5).map(app => `使用 ${app}`),
