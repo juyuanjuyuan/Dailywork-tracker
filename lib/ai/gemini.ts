@@ -54,7 +54,6 @@ async function callOpenAI(prompt: string, imageBase64?: string): Promise<string>
       model: 'gpt-5-nano-2025-08-07',
       messages,
       max_completion_tokens: 2000,
-      temperature: 0.2,
       response_format: { type: 'json_object' }
     })
   });
