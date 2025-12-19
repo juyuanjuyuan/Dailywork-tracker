@@ -1,6 +1,6 @@
 /**
  * AI Work Tracker - OpenAI GPT Integration
- * 使用 OpenAI gpt-5-nano-2025-08-07 分析截图
+ * 使用 OpenAI gpt-5-mini-2025-08-07 分析截图
  */
 
 import { ScreenshotAnalysis, ActivityType, WorkReport, TimeBreakdown } from '@lib/types';
@@ -51,7 +51,7 @@ async function callOpenAI(prompt: string, imageBase64?: string): Promise<string>
       'Authorization': `Bearer ${OPENAI_API_KEY}`
     },
     body: JSON.stringify({
-      model: 'gpt-5-nano-2025-08-07',
+      model: 'gpt-5-mini-2025-08-07',
       messages,
       max_completion_tokens: 2000,
       response_format: { type: 'json_object' }
