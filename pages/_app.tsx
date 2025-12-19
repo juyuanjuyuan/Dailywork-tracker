@@ -3,6 +3,7 @@
  */
 
 import { SSRProvider, OverlayProvider } from 'react-aria';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import '@styles/global.css';
 import '@styles/nprogress.css';
 import '@styles/chrome-bug.css';
@@ -24,6 +25,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
           <ResizeHandler />
           <NProgress />
+          <SpeedInsights />
         </AuthProvider>
       </OverlayProvider>
     </SSRProvider>
